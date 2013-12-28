@@ -2,8 +2,7 @@
 from pylab import *
 from tabulate import tabulate
 
-# TODO Check instructions for loop ending conditions and warn about endless loops.
-# TODO Printing list of instructions.
+# TODO Check instructions for loop ending conditions and warn about endless loops. Check when instruction are given.
 # TODO Text based interface, with commands to select what to do.
 
 
@@ -28,21 +27,24 @@ def applyinstr(inst, state):
 
 
 def enterinitval():
+    """This function will prompt for the initial values that will be used in the program. It will transform them into a
+    vector"""
     initval = input("Introduce los valores iniciales:")  # Initial values input.
     # Removing parentheses, splitting and turning them into integers.
     initval = initval[1:-1]
     initval = initval.split(",")
-    for j in range(len(initval)):
-        initval[j] = int(initval[j])
-
+    return [int(v) for v in initval]
 
 
 def enterinstr():
-    instructions = [[0, 0, 0, 0]]  # Initial matrix instructions. It starts with 0 to ease on the indices.
+    """This function will prompt for the instructions that will be used in the program. It will transform them into a
+    matrix of instructions in which the first one will be made of zeros. The function will stop asking for instructions
+    whenever "end" is entered as an instruction"""
+    instructions = [[-2, -2, -2, -2]]  # Initial instruction matrix. Starts with -2 to ease on the indices and printing.
     inp = input("Introduce una instrucción: ")
     # Starting loop to enter instructions. Loop ends once "end" is given as an instruction.
     while inp != "end":
-        if (inp[0] == "(0") and inp[len(inp) - 1] == ")":
+        if (inp[0] == "(") and inp[len(inp) - 1] == ")":
             inp = inp[1:-1]
             inps = inp.split(",")
 
@@ -132,13 +134,12 @@ def editinstruc(instructions, nins, newinstruc):
         instructions[nins] = [int(splitinst[0]), 1, int(splitinst[2]), int(splitinst[3])]
 
 
-# (t, x, p) = regtable(vinic, instruc)
-# print(p)
-# n1 = int(input("Número de registro: "))
-# n2 = int(input("Número de pasos: "))
-# print(getstate(instruc, vinic, n1, n2))
-# print(instruc)
-# m1 = input("Introduce la nueva instrucción: ")
-# m2 = int(input("Número de instrucción a sustituir: "))
-# editinstruc(instruc, m2, m1)
-# print(instruc)
+def printinst(instructions):
+    for i, instruc in enumerate(instructions):
+        if instruc[1] == 0:
+            print("S%d  (%d,+,%d)" % (i, instruc[0], instruc[2]))
+        elif  instruc[1] == 1:
+            print("S%d  (%d,-,%d,%d)" % (i, instruc[0], instruc[2], instruc[3]))
+        else:
+            print("Instrucciones")
+            print("=============")
