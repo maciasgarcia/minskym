@@ -138,7 +138,7 @@ def printinst(instructions):
     for i, instruc in enumerate(instructions):
         if instruc[1] == 0:
             print("S%d  (%d,+,%d)" % (i, instruc[0], instruc[2]))
-        elif  instruc[1] == 1:
+        elif instruc[1] == 1:
             print("S%d  (%d,-,%d,%d)" % (i, instruc[0], instruc[2], instruc[3]))
         else:
             print("Instrucciones")
