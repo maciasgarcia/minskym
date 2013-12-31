@@ -1,9 +1,51 @@
 # coding: utf8
 from pylab import *
 from tabulate import tabulate
+import re
 
+# TODO Modify the instruction and values transformation to accept spacing when entering them.
 # TODO Check instructions for loop ending conditions and warn about endless loops. Check when instruction are given.
+# TODO Modify editinstruc to give the option to put the new instruction in other position.
+# TODO Add new instructions in betweeen?
 # TODO Text based interface, with commands to select what to do.
+
+
+def enterinitval():
+    """This function will prompt for the initial values that will be used in the program. It will transform them into a
+    vector"""
+    initval = input("Introduce los valores iniciales:")  # Initial values input.
+    # Removing parentheses, splitting and turning them into integers.
+    initval = initval[1:-1]
+    initval = re.split('[^0-9\+\-]+', initval)
+    return [int(v) for v in initval]
+
+
+def enterinstr():
+    """This function will prompt for the instructions that will be used in the program. It will transform them into a
+    matrix of instructions in which the first one will be made of zeros. The function will stop asking for instructions
+    whenever "end" is entered as an instruction"""
+    instructions = [[-2, -2, -2, -2]]  # Initial instruction matrix. Starts with -2 to ease on the indices and printing.
+    inp = input("Introduce una instrucción: ")
+    # Starting loop to enter instructions. Loop ends once "end" is given as an instruction.
+    while inp != "end":
+        if (inp[0] == "(") and inp[len(inp) - 1] == ")":
+            inp = inp[1:-1]
+            inps = re.split('[^0-9\+\-]+', inp)
+
+            if inps[1] == "+" and len(inps) == 3:
+                instructions = vstack([instructions, [int(inps[0]), 0, int(inps[2]), -1]])  # Last member is -1 for
+                                                                                    # checking loop ending conditions.
+            elif inps[1] == "-" and len(inps) == 4:
+                instructions = vstack([instructions, [int(inps[0]), 1, int(inps[2]), int(inps[3])]])
+
+            else:
+                print("La instrucción no es válida.")
+            inp = input("Introduce otra instrucción:")
+
+        else:
+            print("La instrucción no es válida.")
+            inp = input("Introduce otra instrucción:")
+    return instructions
 
 
 def applyinstr(inst, state):
@@ -24,44 +66,6 @@ def applyinstr(inst, state):
 
     else:
         return inst[3], state
-
-
-def enterinitval():
-    """This function will prompt for the initial values that will be used in the program. It will transform them into a
-    vector"""
-    initval = input("Introduce los valores iniciales:")  # Initial values input.
-    # Removing parentheses, splitting and turning them into integers.
-    initval = initval[1:-1]
-    initval = initval.split(",")
-    return [int(v) for v in initval]
-
-
-def enterinstr():
-    """This function will prompt for the instructions that will be used in the program. It will transform them into a
-    matrix of instructions in which the first one will be made of zeros. The function will stop asking for instructions
-    whenever "end" is entered as an instruction"""
-    instructions = [[-2, -2, -2, -2]]  # Initial instruction matrix. Starts with -2 to ease on the indices and printing.
-    inp = input("Introduce una instrucción: ")
-    # Starting loop to enter instructions. Loop ends once "end" is given as an instruction.
-    while inp != "end":
-        if (inp[0] == "(") and inp[len(inp) - 1] == ")":
-            inp = inp[1:-1]
-            inps = inp.split(",")
-
-            if inps[1] == "+" and len(inps) == 3:
-                instructions = vstack([instructions, [int(inps[0]), 0, int(inps[2]), -1]])  # Last member is -1 for
-                                                                                    # checking loop ending conditions.
-            elif inps[1] == "-" and len(inps) == 4:
-                instructions = vstack([instructions, [int(inps[0]), 1, int(inps[2]), int(inps[3])]])
-
-            else:
-                print("La instrucción no es válida.")
-            inp = input("Introduce otra instrucción:")
-
-        else:
-            print("La instrucción no es válida.")
-            inp = input("Introduce otra instrucción:")
-    return instructions
 
 
 def regtable(initval, instructions):
@@ -126,7 +130,7 @@ def getstate(instructions, initval, register, stepnum):
 def editinstruc(instructions, nins, newinstruc):
     """This function edits the instruction number nins and replaces it for the newinstruc"""
     newinstruc = newinstruc[1:-1]
-    splitinst = newinstruc.split(",")
+    splitinst = re.split('[^0-9\+\-]+', newinstruc)
 
     if splitinst[1] == "+" and len(splitinst) == 3:
         instructions[nins] = [int(splitinst[0]), 0, int(splitinst[2]), -1]
@@ -143,3 +147,5 @@ def printinst(instructions):
         else:
             print("Instrucciones")
             print("=============")
+
+commands = ['Enter values', 'Enter instructions', 'Register table', 'Edit instruction',]
