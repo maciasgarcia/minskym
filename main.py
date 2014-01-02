@@ -3,11 +3,9 @@ from pylab import *
 from tabulate import tabulate
 import re
 
-# TODO Modify the instruction and values transformation to accept spacing when entering them.
-# TODO Check instructions for loop ending conditions and warn about endless loops. Check when instruction are given.
+# TODO Change the commands to a dictionary and also print the explanation for each command.
 # TODO Modify editinstruc to give the option to put the new instruction in other position.
 # TODO Add new instructions in betweeen?
-# TODO Text based interface, with commands to select what to do.
 
 
 def enterinitval():
@@ -140,12 +138,49 @@ def editinstruc(instructions, nins, newinstruc):
 
 def printinst(instructions):
     for i, instruc in enumerate(instructions):
-        if instruc[1] == 0:
-            print("S%d  (%d,+,%d)" % (i, instruc[0], instruc[2]))
-        elif instruc[1] == 1:
-            print("S%d  (%d,-,%d,%d)" % (i, instruc[0], instruc[2], instruc[3]))
-        else:
+        if instruc[1] == 0:    # Case in which we need to print a + instruction
+            print("S%d  (%d, +, %d)" % (i, instruc[0], instruc[2]))
+        elif instruc[1] == 1:  # Case in which we need to print a + instruction
+            print("S%d  (%d, -, %d, %d)" % (i, instruc[0], instruc[2], instruc[3]))
+        else:  # We use the fact that our matrix always starts with a row of -2, and no other row has other than 0 or 1.
             print("Instrucciones")
             print("=============")
 
-commands = ['Enter values', 'Enter instructions', 'Register table', 'Edit instruction',]
+
+def debugprogram(instructions):
+    # Checking for program exit condition (i.e. exists a 0 somewhere in the states)
+    if 0 not in instructions[:, 2] and 0 not in instructions[:, 3]:
+        print("Su programa no tiene condición de salida.")
+        print("Si quiere editar su programa use la instrucción 'Edit instruction'")
+    infiniteloop = False
+    infloopinst = []
+    for i, instruct in enumerate(instructions):
+        if i == instruct[2] or i == instruct[3]:
+            infiniteloop = True
+            infloopinst.append(i)
+    if infiniteloop:
+        print("Su programa podría no acabar al tener un bucle infinito en las instrucciones", infloopinst)
+        print("Si no es su intención, modifique las instrucciones con 'Edit instruction'")
+
+
+
+# commands = ['Commands', 'Enter values', 'Enter instructions', 'Register table', 'Edit instruction', 'Get state']
+# usr_input = ''
+# usr_initval = [0]
+# while usr_input != "End":
+#     while usr_input not in commands:
+#         usr_input = input("¿Qué quiere hacer?: ")
+#     if usr_input == commands[0]:
+#         print("Los comandos disponibles son:")
+#         for comm in commands:
+#             print(comm)
+#     elif usr_input == commands[1]:
+#         val = enterinitval()
+#     elif usr_input == commands[2]:
+#         instruct = enterinstr()
+#         debugprogram(instruct)
+#     elif usr_input == commands[3]:
+#         (regist, instlist, tabuld) = regtable(val, instruct)
+#         print(tabuld)
+#
+#     usr_input = input("¿Qué quiere hacer?: ")
