@@ -3,7 +3,6 @@ from pylab import *
 from tabulate import tabulate
 import re
 
-# TODO Change the commands to a dictionary and also print the explanation for each command.
 # TODO Modify editinstruc to give the option to put the new instruction in other position.
 # TODO Add new instructions in betweeen?
 
@@ -136,7 +135,15 @@ def editinstruc(instructions, nins, newinstruc):
         instructions[nins] = [int(splitinst[0]), 1, int(splitinst[2]), int(splitinst[3])]
 
 
-def printinst(instructions):
+def printusrdata(values, instructions):
+    valstr = "("
+    for ival in values:
+        valstr += "%d, " % ival
+    valstr = valstr[:-2]
+    valstr += ")"
+    print("Valores iniciales")
+    print("=================")
+    print(valstr)
     for i, instruc in enumerate(instructions):
         if instruc[1] == 0:    # Case in which we need to print a + instruction
             print("S%d  (%d, +, %d)" % (i, instruc[0], instruc[2]))
@@ -163,24 +170,48 @@ def debugprogram(instructions):
         print("Si no es su intención, modifique las instrucciones con 'Edit instruction'")
 
 
+commands = {'Commands': 'Prints the list of commands and their explanation.',
+            'Enter values': 'Lets the user introduce initial values for the program.',
+            'Enter instructions': 'Lets the user introduce the instructions for the program.',
+            'Register table': 'Prints a table with the values of the registers at each step.',
+            'Print data': 'Prints the data entered by the user',
+            'Edit instrucions': 'Allows the user to modify a single instruction ',
+            'Get state': 'Allows to recover the content of a register in a specified step of the program.',
+            'Debug': 'Debugs the current program, i.e., warns about endless loops and no exit of the program.'}
 
-# commands = ['Commands', 'Enter values', 'Enter instructions', 'Register table', 'Edit instruction', 'Get state']
-# usr_input = ''
-# usr_initval = [0]
-# while usr_input != "End":
-#     while usr_input not in commands:
-#         usr_input = input("¿Qué quiere hacer?: ")
-#     if usr_input == commands[0]:
-#         print("Los comandos disponibles son:")
-#         for comm in commands:
-#             print(comm)
-#     elif usr_input == commands[1]:
-#         val = enterinitval()
-#     elif usr_input == commands[2]:
-#         instruct = enterinstr()
-#         debugprogram(instruct)
-#     elif usr_input == commands[3]:
-#         (regist, instlist, tabuld) = regtable(val, instruct)
-#         print(tabuld)
-#
-#     usr_input = input("¿Qué quiere hacer?: ")
+
+def main():
+    usr_input = ''
+    usr_initval = [0]
+    usr_instruc = [[-2, -2, -2, -2]]
+    while usr_input != "End":
+        while usr_input not in commands.keys():
+            usr_input = input("¿Qué quiere hacer?: ")
+        if usr_input == 'Commands':
+            print("Los comandos disponibles son:")
+            for icom, comm in enumerate(commands):
+                print(icom + 1, "-.", comm, ":", commands[comm])
+        elif usr_input == 'Enter values':
+            usr_initval = enterinitval()
+        elif usr_input == 'Enter instructions':
+            usr_instruc = enterinstr()
+            debugprogram(usr_instruc)
+        elif usr_input == 'Register table':
+            (regist, instlist, tabuld) = regtable(usr_initval, usr_instruc)
+            print(tabuld)
+        elif usr_input == 'Print data':
+            printusrdata(usr_initval, usr_instruc)
+        elif usr_input == 'Edit instructions':
+            n = input("¿Qué instrucción quiere modificar?: ")
+            insstr = input("Introduzca la nueva instrucción: ")
+            editinstruc(usr_instruc, n, insstr)
+        elif usr_input == 'Debug':
+            debugprogram(usr_instruc)
+        elif usr_input == 'Get state':
+            m1 = input("¿Qué registro quiere consultar?: ")
+            m2 = input("¿En qué paso quiere consultarlo?: ")
+            print(getstate(usr_instruc, usr_initval, m1, m2))
+        usr_input = input("¿Qué quiere hacer?: ")
+
+if __name__ == "__main__":
+    main()
