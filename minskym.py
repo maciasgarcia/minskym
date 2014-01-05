@@ -3,8 +3,11 @@ from pylab import *
 from tabulate import tabulate
 import re
 
-# TODO Modify editinstruc to give the option to put the new instruction in other position.
-# TODO Add new instructions in betweeen?
+# TODO Create minsky.py and minskyes.py and translate them in their respective languages.
+# TODO If exist an infinite loop (intentionally) force it to stop after X iterations and show it on the reg. table.
+# TODO Finish READMES
+# TODO Add LICENSE
+
 
 
 def enterinitval():
