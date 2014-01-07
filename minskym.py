@@ -4,16 +4,16 @@ from tabulate import tabulate
 import re
 
 # TODO Create minsky.py and minskyes.py and translate them in their respective languages.
+# TODO Explain in commands how to use it.
 # TODO If exist an infinite loop (intentionally) force it to stop after X iterations and show it on the reg. table.
 # TODO Finish READMES
 # TODO Add LICENSE
 
 
-
 def enterinitval():
     """This function will prompt for the initial values that will be used in the program. It will transform them into a
     vector"""
-    initval = input("Introduce los valores iniciales:")  # Initial values input.
+    initval = input("Please enter the initial values: ")  # Initial values input.
     # Removing parentheses, splitting and turning them into integers.
     initval = initval[1:-1]
     initval = re.split('[^0-9\+\-]+', initval)
@@ -25,7 +25,7 @@ def enterinstr():
     matrix of instructions in which the first one will be made of zeros. The function will stop asking for instructions
     whenever "end" is entered as an instruction"""
     instructions = [[-2, -2, -2, -2]]  # Initial instruction matrix. Starts with -2 to ease on the indices and printing.
-    inp = input("Introduce una instrucción: ")
+    inp = input("Please enter an instruction: ")
     # Starting loop to enter instructions. Loop ends once "end" is given as an instruction.
     while inp != "end":
         if (inp[0] == "(") and inp[len(inp) - 1] == ")":
@@ -39,12 +39,12 @@ def enterinstr():
                 instructions = vstack([instructions, [int(inps[0]), 1, int(inps[2]), int(inps[3])]])
 
             else:
-                print("La instrucción no es válida.")
-            inp = input("Introduce otra instrucción:")
+                print("That is not a valid instruction.")
+            inp = input("Please enter another instruction: ")
 
         else:
-            print("La instrucción no es válida.")
-            inp = input("Introduce otra instrucción:")
+            print("That is not a valid instruction.")
+            inp = input("Please enter another instruction: ")
     return instructions
 
 
@@ -124,7 +124,7 @@ def getstate(instructions, initval, register, stepnum):
         else:
             return reg[stepnum - 1]
     else:
-        return "El registro no es válido."
+        return "That is not a valid register number."
 
 
 def editinstruc(instructions, nins, newinstruc):
@@ -144,8 +144,8 @@ def printusrdata(values, instructions):
         valstr += "%d, " % ival
     valstr = valstr[:-2]
     valstr += ")"
-    print("Valores iniciales")
-    print("=================")
+    print("Initial values")
+    print("==============")
     print(valstr)
     for i, instruc in enumerate(instructions):
         if instruc[1] == 0:    # Case in which we need to print a + instruction
@@ -153,24 +153,38 @@ def printusrdata(values, instructions):
         elif instruc[1] == 1:  # Case in which we need to print a + instruction
             print("S%d  (%d, -, %d, %d)" % (i, instruc[0], instruc[2], instruc[3]))
         else:  # We use the fact that our matrix always starts with a row of -2, and no other row has other than 0 or 1.
-            print("Instrucciones")
-            print("=============")
+            print("Instructions")
+            print("============")
 
 
 def debugprogram(instructions):
-    # Checking for program exit condition (i.e. exists a 0 somewhere in the states)
-    if 0 not in instructions[:, 2] and 0 not in instructions[:, 3]:
-        print("Su programa no tiene condición de salida.")
-        print("Si quiere editar su programa use la instrucción 'Edit instruction'")
+    """This function will check in the instruction matrix for 3 things: a program endig condition, if there is a
+    possibility of an endless loop and if there are referenced unexisting instructions"""
+    programend = True
     infiniteloop = False
+    nonexistinst = False
+    instrnumber = len(instructions)
     infloopinst = []
+
     for i, instruct in enumerate(instructions):
         if i == instruct[2] or i == instruct[3]:
             infiniteloop = True
             infloopinst.append(i)
+    # Checking for program ending condition (i.e. exists a 0 somewhere in the program).
+    if 0 not in instructions[:, 2] and 0 not in instructions[:, 3]:
+        programend = False
+        print("Your program does not have an exit condition.")
+    # Checking for infinite loops in the program.
     if infiniteloop:
-        print("Su programa podría no acabar al tener un bucle infinito en las instrucciones", infloopinst)
-        print("Si no es su intención, modifique las instrucciones con 'Edit instruction'")
+        print("Your program could not finish due having an infinite loop on the instructions", infloopinst)
+    # Checking for instructions referenced that do not exist.
+    if (instructions[:, 2].max() > instrnumber) or (instructions[:, 3].max() > instrnumber):
+        nonexistinst = True
+        print("Your program references an instruction that does not exist.")
+
+    if infiniteloop or not programend or nonexistinst:
+        print("If you wish to edit your program, use the 'Edit instruction' command or enter a new one with 'Enter "
+              "instructions'")
 
 
 commands = {'Commands': 'Prints the list of commands and their explanation.',
@@ -184,37 +198,49 @@ commands = {'Commands': 'Prints the list of commands and their explanation.',
 
 
 def main():
+    print("Please first enter the initial values and then enter the instructions that compose the program.")
+    print("   *The initial values must be entered between parentheses and separated by commas.")
+    print("   *Each instruction must be entered in the order they will appear and in the form (j,+,k) or (j,-,k,l).")
     usr_input = ''
-    usr_initval = [0]
-    usr_instruc = [[-2, -2, -2, -2]]
+    usr_initval = enterinitval()
+    usr_instruc = enterinstr()
+    
     while usr_input != "End":
         while usr_input not in commands.keys():
-            usr_input = input("¿Qué quiere hacer?: ")
+            usr_input = input("What would you like to do?: ").capitalize()
+
         if usr_input == 'Commands':
-            print("Los comandos disponibles son:")
+            print("Available commands are:")
             for icom, comm in enumerate(commands):
                 print(icom + 1, "-.", comm, ":", commands[comm])
+
         elif usr_input == 'Enter values':
             usr_initval = enterinitval()
+
         elif usr_input == 'Enter instructions':
             usr_instruc = enterinstr()
             debugprogram(usr_instruc)
+
         elif usr_input == 'Register table':
             (regist, instlist, tabuld) = regtable(usr_initval, usr_instruc)
             print(tabuld)
+
         elif usr_input == 'Print data':
             printusrdata(usr_initval, usr_instruc)
+
         elif usr_input == 'Edit instructions':
-            n = input("¿Qué instrucción quiere modificar?: ")
-            insstr = input("Introduzca la nueva instrucción: ")
+            n = input("Which instruction do you want to modify?: ")
+            insstr = input("Please enter the new instruction: ")
             editinstruc(usr_instruc, n, insstr)
+
         elif usr_input == 'Debug':
             debugprogram(usr_instruc)
+
         elif usr_input == 'Get state':
-            m1 = input("¿Qué registro quiere consultar?: ")
-            m2 = input("¿En qué paso quiere consultarlo?: ")
+            m1 = input("Enter the register number: ")
+            m2 = input("Enter the step number: ")
             print(getstate(usr_instruc, usr_initval, m1, m2))
-        usr_input = input("¿Qué quiere hacer?: ")
+        usr_input = input("What would you like to do?: ").capitalize()
 
 if __name__ == "__main__":
     main()
