@@ -4,7 +4,6 @@ from tabulate import tabulate
 import re
 
 # TODO Create minsky.py and minskyes.py and translate them in their respective languages.
-# TODO Explain in commands how to use it.
 # TODO Finish READMES
 # TODO Add LICENSE
 
@@ -197,13 +196,19 @@ def debugprogram(instructions):
 
 
 commands = {'Commands': 'Prints the list of commands and their explanation.',
-            'Enter values': 'Lets the user introduce initial values for the program.',
-            'Enter instructions': 'Lets the user introduce the instructions for the program.',
+            'Enter values': 'Lets the user introduce initial values for the program. Values should be between '
+                            'parentheses and separated by commas.',
+            'Enter instructions': 'Lets the user introduce the instructions for the program. Each instruction must be'
+                                  ' entered in the order they will appear and in the form (j,+,k) or (j,-,k,l).',
             'Register table': 'Prints a table with the values of the registers at each step.',
-            'Print data': 'Prints the data entered by the user',
-            'Edit instrucions': 'Allows the user to modify a single instruction ',
-            'Get state': 'Allows to recover the content of a register in a specified step of the program.',
-            'Debug': 'Debugs the current program, i.e., warns about endless loops and no exit of the program.'}
+            'Print data': 'Prints the data entered by the user.',
+            'Edit instrucions': 'Allows the user to modify a single instruction.',
+            'Get state': 'Allows to recover the content of a register in a specified step of the program or the number '
+                         'of instruction on that step. When entering 0 as the register, it will return the instruction'
+                         ' on that step, and when entering -1 it will return all the registers.',
+            'Debug': 'Debugs the current program. It warns about endless loops, no exit conditions in the program and '
+                     'referencing instructions that are not in the entered ones. It will execute automatically after '
+                     'entering a whole set of instructions.'}
 
 
 def main():
