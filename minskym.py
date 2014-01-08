@@ -5,7 +5,6 @@ import re
 
 # TODO Create minsky.py and minskyes.py and translate them in their respective languages.
 # TODO Explain in commands how to use it.
-# TODO If exist an infinite loop (intentionally) force it to stop after X iterations and show it on the reg. table.
 # TODO Finish READMES
 # TODO Add LICENSE
 
@@ -79,10 +78,20 @@ def regtable(initval, instructions):
     currentinst = 1  # Initialize the variable to store S_i states.
     listinstruc = ["S%d" % currentinst]  # String list with S_i to tabulate
     listninstruc = [1]  # Int list of the states.
+    loopchecker = 0
+    infiniteloop = False
     # Loop that computes the table of states with the instructions given.
     while currentinst != 0:
         (ins, est) = applyinstr(instructions[currentinst], registers[-1])
-        currentinst = ins
+        if ins == currentinst:
+            loopchecker += 1
+        else:
+            loopchecker = 0
+        if loopchecker > 50:
+            infiniteloop = True
+            currentinst = 0
+        else:
+            currentinst = ins
         listinstruc = vstack([listinstruc, ["S%d" % currentinst]])
         listninstruc = vstack([listninstruc, currentinst])
         registers = vstack([registers, est])
@@ -93,7 +102,7 @@ def regtable(initval, instructions):
     # Table for data printing.
     tabuldata = tabulate(hstack(([listinstruc, registers])), headers=heade, tablefmt='rst')
 
-    return registers, listninstruc, tabuldata
+    return registers, listninstruc, tabuldata, infiniteloop
 
 
 def getstate(instructions, initval, register, stepnum):
@@ -102,7 +111,7 @@ def getstate(instructions, initval, register, stepnum):
     the existing ones, it'll return 0. If the step number is greater than the number of steps needed to reach S0, it'll
     return the register value for S0. Additionally, if the register given is -1, the function will return the complete
     vector of register on that step."""
-    (reg, lis, tab) = regtable(initval, instructions)
+    (reg, lis, tab, loop) = regtable(initval, instructions)
     numstates = len(reg)
     maxregister = instructions[:, 0].max()
 
@@ -204,6 +213,7 @@ def main():
     usr_input = ''
     usr_initval = enterinitval()
     usr_instruc = enterinstr()
+    debugprogram(usr_instruc)
     
     while usr_input != "End":
         while usr_input not in commands.keys():
@@ -222,8 +232,12 @@ def main():
             debugprogram(usr_instruc)
 
         elif usr_input == 'Register table':
-            (regist, instlist, tabuld) = regtable(usr_initval, usr_instruc)
-            print(tabuld)
+            (regist, instlist, tabuld, loop) = regtable(usr_initval, usr_instruc)
+            if loop:
+                print(tabuld)
+                print("Your program was forced to stop due to having a posible infinite loop.")
+            else:
+                print(tabuld)
 
         elif usr_input == 'Print data':
             printusrdata(usr_initval, usr_instruc)
