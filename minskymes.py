@@ -189,7 +189,8 @@ def debugprogram(instructions):
     if infiniteloop or not programend or nonexistinst:
         print("Si desea editar su programa, utilice el comando 'Modificar instrucción' o introduzca un nuevo programa"
               " con 'Introducir instrucciones'")
-
+    else:
+        print("Su programa no presenta ningún problema.")
 
 commands = {'Comando': 'Muestra la lista de comandos y sus explicaciones.',
             'Introducir valores': 'Permite al usuario introducir valores iniciales para el programa. Los valores '

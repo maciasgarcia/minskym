@@ -5,6 +5,7 @@ import re
 
 # TODO Finish READMES
 # TODO Add LICENSE
+# TODO Add quick setup guide to install al the necessary things.
 
 def enterinitval():
     """This function will prompt for the initial values that will be used in the program. It will transform them into a
@@ -191,6 +192,8 @@ def debugprogram(instructions):
     if infiniteloop or not programend or nonexistinst:
         print("If you wish to edit your program, use the 'Edit instruction' command or enter a new one with 'Enter "
               "instructions'")
+    else:
+        print("Your program does not have any problems.")
 
 
 commands = {'Commands': 'Prints the list of commands and their explanation.',
