@@ -3,10 +3,8 @@ from pylab import *
 from tabulate import tabulate
 import re
 
-# TODO Create minsky.py and minskyes.py and translate them in their respective languages.
 # TODO Finish READMES
 # TODO Add LICENSE
-
 
 def enterinitval():
     """This function will prompt for the initial values that will be used in the program. It will transform them into a
@@ -66,7 +64,7 @@ def applyinstr(inst, state):
         return inst[3], state
 
 
-def regtable(initval, instructions):
+def regtable(initval, instructions, looplim):
     """ This function parameters are a set of initial values and a program for Minsky's machine and returns a vector in
     which are store the sequence of instructions that the machine has gone through and each of the states of the machine
      in those steps. The third member of the vector is a tabulated version of the data."""
@@ -86,7 +84,7 @@ def regtable(initval, instructions):
             loopchecker += 1
         else:
             loopchecker = 0
-        if loopchecker > 50:
+        if loopchecker > looplim:
             infiniteloop = True
             currentinst = 0
         else:
@@ -104,13 +102,13 @@ def regtable(initval, instructions):
     return registers, listninstruc, tabuldata, infiniteloop
 
 
-def getstate(instructions, initval, register, stepnum):
+def getstate(instructions, initval, register, stepnum, looplim):
     """Given instructions, a set of initial values, a register number and a step number, this function returns
     the value of the register at that step once calculated the register states. If the register number is greater than
     the existing ones, it'll return 0. If the step number is greater than the number of steps needed to reach S0, it'll
     return the register value for S0. Additionally, if the register given is -1, the function will return the complete
     vector of register on that step."""
-    (reg, lis, tab, loop) = regtable(initval, instructions)
+    (reg, lis, tab, loop) = regtable(initval, instructions, looplim)
     numstates = len(reg)
     maxregister = instructions[:, 0].max()
 
@@ -208,7 +206,9 @@ commands = {'Commands': 'Prints the list of commands and their explanation.',
                          ' on that step, and when entering -1 it will return all the registers.',
             'Debug': 'Debugs the current program. It warns about endless loops, no exit conditions in the program and '
                      'referencing instructions that are not in the entered ones. It will execute automatically after '
-                     'entering a whole set of instructions.'}
+                     'entering a whole set of instructions.',
+            'Loop limit': 'Allows the user to define a new number to be the maximum of iterations the program will '
+                          'do before it considers it to be in an endless loop.'}
 
 
 def main():
@@ -216,6 +216,7 @@ def main():
     print("   *The initial values must be entered between parentheses and separated by commas.")
     print("   *Each instruction must be entered in the order they will appear and in the form (j,+,k) or (j,-,k,l).")
     usr_input = ''
+    looplimit = 50
     usr_initval = enterinitval()
     usr_instruc = enterinstr()
     debugprogram(usr_instruc)
@@ -237,7 +238,7 @@ def main():
             debugprogram(usr_instruc)
 
         elif usr_input == 'Register table':
-            (regist, instlist, tabuld, loop) = regtable(usr_initval, usr_instruc)
+            (regist, instlist, tabuld, loop) = regtable(usr_initval, usr_instruc, looplimit)
             if loop:
                 print(tabuld)
                 print("Your program was forced to stop due to having a posible infinite loop.")
@@ -256,9 +257,13 @@ def main():
             debugprogram(usr_instruc)
 
         elif usr_input == 'Get state':
-            m1 = input("Enter the register number: ")
-            m2 = input("Enter the step number: ")
-            print(getstate(usr_instruc, usr_initval, m1, m2))
+            m1 = int(input("Enter the register number: "))
+            m2 = int(input("Enter the step number: "))
+            print(getstate(usr_instruc, usr_initval, m1, m2, looplimit))
+
+        elif usr_input == "Loop limit":
+            looplimit = int(input("How many iterations do you want to set for the limit?: "))
+
         usr_input = input("What would you like to do?: ").capitalize()
 
 if __name__ == "__main__":

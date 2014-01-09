@@ -3,10 +3,6 @@ from pylab import *
 from tabulate import tabulate
 import re
 
-# TODO Create minsky.py and minskyes.py and translate them in their respective languages.
-# TODO Finish READMES
-# TODO Add LICENSE
-
 
 def enterinitval():
     """This function will prompt for the initial values that will be used in the program. It will transform them into a
@@ -66,7 +62,7 @@ def applyinstr(inst, state):
         return inst[3], state
 
 
-def regtable(initval, instructions):
+def regtable(initval, instructions, looplim):
     """ This function parameters are a set of initial values and a program for Minsky's machine and returns a vector in
     which are store the sequence of instructions that the machine has gone through and each of the states of the machine
      in those steps. The third member of the vector is a tabulated version of the data."""
@@ -86,7 +82,7 @@ def regtable(initval, instructions):
             loopchecker += 1
         else:
             loopchecker = 0
-        if loopchecker > 50:
+        if loopchecker > looplim:
             infiniteloop = True
             currentinst = 0
         else:
@@ -104,13 +100,13 @@ def regtable(initval, instructions):
     return registers, listninstruc, tabuldata, infiniteloop
 
 
-def getstate(instructions, initval, register, stepnum):
+def getstate(instructions, initval, register, stepnum, looplim):
     """Given instructions, a set of initial values, a register number and a step number, this function returns
     the value of the register at that step once calculated the register states. If the register number is greater than
     the existing ones, it'll return 0. If the step number is greater than the number of steps needed to reach S0, it'll
     return the register value for S0. Additionally, if the register given is -1, the function will return the complete
     vector of register on that step."""
-    (reg, lis, tab, loop) = regtable(initval, instructions)
+    (reg, lis, tab, loop) = regtable(initval, instructions, looplim)
     numstates = len(reg)
     maxregister = instructions[:, 0].max()
 
@@ -191,8 +187,8 @@ def debugprogram(instructions):
         print("Su programa hace referencia a una instrucción que no existe.")
 
     if infiniteloop or not programend or nonexistinst:
-        print("Si desea editar su programa, utilice el comando 'Modificar instrucción' o introduzca un nuevo programa con "
-              " 'Introducir instrucciones'")
+        print("Si desea editar su programa, utilice el comando 'Modificar instrucción' o introduzca un nuevo programa"
+              " con 'Introducir instrucciones'")
 
 
 commands = {'Comando': 'Muestra la lista de comandos y sus explicaciones.',
@@ -209,7 +205,9 @@ commands = {'Comando': 'Muestra la lista de comandos y sus explicaciones.',
                                 'encuentra en dicho paso. Al introducir -1 devolverá todos los registros.',
             'Depurar': 'Depura el programa actual. Alerta sobre bucles infinitos, la falta de condiciones de salida '
                        'del programa y la referencia a instrucciones inexistentes. Se ejecurará automáticamente cada '
-                       'vez que el usuario introduzca un programa por sus instrucciones.'}
+                       'vez que el usuario introduzca un programa por sus instrucciones.',
+            'Límite bucle': 'Permite al usuario definir un nuevo máximo de iteraciones en las que el programa parará si'
+                            ' cree que se encuentra en un bucle infinito.'}
 
 
 def main():
@@ -217,6 +215,7 @@ def main():
     print("   *Los valores iniciales deberán estar entre paréntesis y separados por comas.")
     print("   *Cada instrucción deberá estar dada en el orden deseado y en la forma (j,+,k) o (j,-,k,l).")
     usr_input = ''
+    looplimit = 50
     usr_initval = enterinitval()
     usr_instruc = enterinstr()
     debugprogram(usr_instruc)
@@ -238,7 +237,7 @@ def main():
             debugprogram(usr_instruc)
 
         elif usr_input == 'Tabla registros':
-            (regist, instlist, tabuld, loop) = regtable(usr_initval, usr_instruc)
+            (regist, instlist, tabuld, loop) = regtable(usr_initval, usr_instruc, looplimit)
             if loop:
                 print(tabuld)
                 print("Su programa fue detenido debido a un posible bucle infinito.")
@@ -257,9 +256,13 @@ def main():
             debugprogram(usr_instruc)
 
         elif usr_input == 'Obtener registro':
-            m1 = input("Introduzca el número de registro: ")
-            m2 = input("Introduzca el paso que quiere consultar: ")
-            print(getstate(usr_instruc, usr_initval, m1, m2))
+            m1 = int(input("Introduzca el número de registro: "))
+            m2 = int(input("Introduzca el paso que quiere consultar: "))
+            print(getstate(usr_instruc, usr_initval, m1, m2, looplimit))
+
+        elif usr_input == "Loop limit":
+            looplimit = int(input("How many iterations do you want to set for the limit?: "))
+
         usr_input = input("¿Qué quiere hacer ahora?: ").capitalize()
 
 if __name__ == "__main__":
