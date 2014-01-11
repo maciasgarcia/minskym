@@ -218,6 +218,7 @@ def main():
     print("Please first enter the initial values and then enter the instructions that compose the program.")
     print("   *The initial values must be entered between parentheses and separated by commas.")
     print("   *Each instruction must be entered in the order they will appear and in the form (j,+,k) or (j,-,k,l).")
+    print("   *The input 'end' will indicate that no more instructions will be entered.")
     usr_input = ''
     looplimit = 50
     usr_initval = enterinitval()

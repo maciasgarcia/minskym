@@ -192,7 +192,7 @@ def debugprogram(instructions):
     else:
         print("Su programa no presenta ningún problema.")
 
-commands = {'Comando': 'Muestra la lista de comandos y sus explicaciones.',
+commands = {'Comandos': 'Muestra la lista de comandos y sus explicaciones.',
             'Introducir valores': 'Permite al usuario introducir valores iniciales para el programa. Los valores '
                                   'deberán estar entre paréntesis y separados por comas.',
             'Introducir instrucciones': 'Permite al usuario introducir un programa dando sus instrucciones. Cada '
@@ -215,6 +215,7 @@ def main():
     print("Primero introduzca los valores iniciales y después las instrucciones que componen el programa.")
     print("   *Los valores iniciales deberán estar entre paréntesis y separados por comas.")
     print("   *Cada instrucción deberá estar dada en el orden deseado y en la forma (j,+,k) o (j,-,k,l).")
+    print("   *Introduciendo 'end' se indica al programa que se deja de introducir instrucciones.")
     usr_input = ''
     looplimit = 50
     usr_initval = enterinitval()
@@ -225,7 +226,7 @@ def main():
         while usr_input not in commands.keys():
             usr_input = input("¿Qué quiere hacer ahora?: ").capitalize()
 
-        if usr_input == 'Commands':
+        if usr_input == 'Comandos':
             print("Los comandos disponibles son:")
             for icom, comm in enumerate(commands):
                 print(icom + 1, "-.", comm, ":", commands[comm])
@@ -261,8 +262,8 @@ def main():
             m2 = int(input("Introduzca el paso que quiere consultar: "))
             print(getstate(usr_instruc, usr_initval, m1, m2, looplimit))
 
-        elif usr_input == "Loop limit":
-            looplimit = int(input("How many iterations do you want to set for the limit?: "))
+        elif usr_input == "Límite bucle":
+            looplimit = int(input("¿Cuántas iteraciones quiere establecer como máximo?: "))
 
         usr_input = input("¿Qué quiere hacer ahora?: ").capitalize()
 
