@@ -65,7 +65,8 @@ def applyinstr(inst, state):
 def regtable(initval, instructions, looplim):
     """ This function parameters are a set of initial values and a program for Minsky's machine and returns a vector in
     which are store the sequence of instructions that the machine has gone through and each of the states of the machine
-     in those steps. The third member of the vector is a tabulated version of the data."""
+     in those steps. The third member of the vector is a tabulated version of the data. The third parameter is the
+     limit of iterations the function will made before it thinks there is an endless loop."""
 
     # Calculating the maximum register needed and fill with zeros the initial values vector until completion.
     maxregister = instructions[:, 0].max()
@@ -78,6 +79,7 @@ def regtable(initval, instructions, looplim):
     # Loop that computes the table of states with the instructions given.
     while currentinst != 0:
         (ins, est) = applyinstr(instructions[currentinst], registers[-1])
+        # Checking for infinite loops.
         if ins == currentinst:
             loopchecker += 1
         else:
@@ -143,6 +145,7 @@ def editinstruc(instructions, nins, newinstruc):
 
 
 def printusrdata(values, instructions):
+    """Prints entered user data, i.e., initial values and entered instructions"""
     valstr = "("
     for ival in values:
         valstr += "%d, " % ival
