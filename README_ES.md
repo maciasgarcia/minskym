@@ -28,6 +28,28 @@ Este editor está programado en Python 3.3.2 y los módulos necesarios para hace
 [SciPy](http://scipy.org/) para hacer uso de los arrays N-dimensionales y el módulo
 [tabulate](https://pypi.python.org/pypi/tabulate) para mostrar correctamente tabulados los datos de los registros.
 
-Funciones implementadas
------------------------
-En curso.
+Funcionamiento
+--------------
+Una vez ejecutado el programa, indicará que deben introducirse primero un conjunto de valores iniciales para el programa
+y las instrucciones que compondrán el mismo. Se detalla la forma de introducción (entre paréntesis y separadas por comas
+para los valores, y como representados anteriormente y en orden para las instrucciones), y una vez terminado, se
+preguntará al usuario qué desea hacer a continuación. Los comandos disponibles son:
+> 1. **Comandos**: Muestra la lista de los comandos con su explicación.
+> 2. **Introducir valores**: Comando para introducir nuevos valores iniciales.
+> 3. **Introducir instrucciones**: Comando para introducir un nuevo programa mediante sus instrucciones.
+> 4. **Tabla registros**: Muestra una tabla con el programa una vez evaluado, en el que se tienen los contenidos de los
+>                         registros en cada paso.
+> 5. **Mostrar datos**: Muestra los datos introducidos por el usuario, esto es, los valores iniciales y las
+>                       instrucciones.
+> 6. **Modificar instrucción**: Permite modificar una única instrucción de un programa introducido.
+> 7. **Obtener registro**: Este comando permite recuperar el contenido de un registro en un paso determinado del
+>                          programa. También permite recuperar la instrucción en dicho paso o el vector de registros
+>                          completos en un paso.
+> 8. **Depurar**: El comando depurar indica si existen problemas con el programa introducido, como bucles infinitos,
+>                 que el programa no tenga condición para terminar o que haya referencias a instrucciones que no
+>                 existen.
+> 9. **Limite bucle**: En caso de que el usuario necesite un máximo de iteraciones mayor que el establecido, este
+>                      comando permite cambiarlo.
+
+Para terminar la ejecución del programa, bastará con introducir "End" como comando. No es precisa la correcta
+capitalización de los comandos anteriores al introducirlos.
