@@ -53,3 +53,22 @@ preguntará al usuario qué desea hacer a continuación. Los comandos disponible
 
 Para terminar la ejecución del programa, bastará con introducir "End" como comando. No es precisa la correcta
 capitalización de los comandos anteriores al introducirlos.
+
+Funciones implementadas
+-----------------------
++ *enterinitval* : Esta función pide la introducción de los valores iniciales. Estos tienen que ser introducidos entre
+    paréntesis y separados por comas. La función separará los valores y los introduce en un vector.
++ *enterinstr* : Esta función pide la introducción de instrucciones para el programa deseado. La función las separará
+    y modificará de manera que sean introducidas en una matriz, en la cual la primera fila está formada por -2 para
+    facilitar el uso de varias funciones posteriores.
++ *applyinst* : Toma una instrucción y un estado de la máquina (esto es, un vector de registros) y aplica
+    la instrucción a dichos registros. Devuelve el vector con los registros nuevos y el número de instrucción siguiente
+    a introducir.
++ *regtable* : Dados un vector de valores iniciales y una matriz con instrucciones, la
+    función calcula los registros en cada paso y los almacena en una matriz. A su vez, también almacena los estados en
+    cada paso. Además, si cree que el programa ha entrado en un bucle sin fin, parará después de *looplim* iteraciones.
+    Una vez calculado todo, la función transformará los datos en una tabla lista para ser mostrada.
+    La función devuelve la matriz de registros, un vector con las instrucciones de cada paso, la tabla con los datos y
+    una variable booleana que indicará si la función ha tenido que parar el programa o no.
++ *getstate* : Esta función permite recuperar el estado de un registro en un paso concreto, recuperar la instrucción en
+    la que se encuentra el programa en un paso u obtener el vector de registros en un paso.
