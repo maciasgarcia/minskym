@@ -6,7 +6,7 @@ import re
 # TODO Two instructions refering eachother == infinite loop.
 # TODO Finish READMES
 # TODO Add LICENSE
-# TODO Add quick setup guide to install al the necessary things.
+
 
 def enterinitval():
     """This function will prompt for the initial values that will be used in the program. It will transform them into a
@@ -139,8 +139,8 @@ def getstate(instructions, initval, register, stepnum, looplim):
 
 def editinstruc(instructions, nins, newinstruc):
     """This function edits the instruction number nins and replaces it for the newinstruc"""
-    newinstruc = newinstruc[1:-1]
-    splitinst = re.split('[^0-9\+\-]+', newinstruc)
+    newinst = newinstruc[1:-1]
+    splitinst = re.split('[^0-9\+\-]+', newinst)
 
     if splitinst[1] == "+" and len(splitinst) == 3:
         instructions[nins] = [int(splitinst[0]), 0, int(splitinst[2]), -1]
@@ -174,7 +174,7 @@ def debugprogram(instructions):
     programend = True
     infiniteloop = False
     nonexistinst = False
-    instrnumber = len(instructions)
+    instrnumber = len(instructions) - 1
     infloopinst = []
 
     for i, instruct in enumerate(instructions):
@@ -219,6 +219,8 @@ commands = {'Commands': 'Prints the list of commands and their explanation.',
 
 
 def main():
+    print("Welcome to the Minsky Machine program editor. If you wish to see the commands, please enter 'Commands'",
+          " once a first program is entered as it is instructed below.")
     print("Please first enter the initial values and then enter the instructions that compose the program.")
     print("   *The initial values must be entered between parentheses and separated by commas.")
     print("   *Each instruction must be entered in the order they will appear and in the form (j,+,k) or (j,-,k,l).")
@@ -259,7 +261,7 @@ def main():
         elif usr_input == 'Edit instructions':
             n = input("Which instruction do you want to modify?: ")
             insstr = input("Please enter the new instruction: ")
-            editinstruc(usr_instruc, n, insstr)
+            editinstruc(usr_instruc, int(n), insstr)
 
         elif usr_input == 'Debug':
             debugprogram(usr_instruc)

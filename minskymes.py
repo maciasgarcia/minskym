@@ -135,8 +135,8 @@ def getstate(instructions, initval, register, stepnum, looplim):
 
 def editinstruc(instructions, nins, newinstruc):
     """This function edits the instruction number nins and replaces it for the newinstruc"""
-    newinstruc = newinstruc[1:-1]
-    splitinst = re.split('[^0-9\+\-]+', newinstruc)
+    newinst = newinstruc[1:-1]
+    splitinst = re.split('[^0-9\+\-]+', newinst)
 
     if splitinst[1] == "+" and len(splitinst) == 3:
         instructions[nins] = [int(splitinst[0]), 0, int(splitinst[2]), -1]
@@ -170,7 +170,7 @@ def debugprogram(instructions):
     programend = True
     infiniteloop = False
     nonexistinst = False
-    instrnumber = len(instructions)
+    instrnumber = len(instructions) - 1
     infloopinst = []
 
     for i, instruct in enumerate(instructions):
@@ -215,6 +215,8 @@ commands = {'Comandos': 'Muestra la lista de comandos y sus explicaciones.',
 
 
 def main():
+    print("Bienvenido al editor de programas de la máquina de Minsky. Si desea conocer los comandos, introduzca"
+          " 'Comandos' una vez introducido el primer programa como se detalla a continuación.")
     print("Primero introduzca los valores iniciales y después las instrucciones que componen el programa.")
     print("   *Los valores iniciales deberán estar entre paréntesis y separados por comas.")
     print("   *Cada instrucción deberá estar dada en el orden deseado y en la forma (j,+,k) o (j,-,k,l).")
@@ -254,9 +256,10 @@ def main():
 
         elif usr_input == 'Modificar instrucción':
             n = input("¿Qué instrucción quiere modificar?: ")
+            while int(n) > len(usr_instruc) - 1:
+                n = input("Dicha instruccion no existe. Introduzca de nuevo el número: ")
             insstr = input("Introduzca la nueva instrucción: ")
-            editinstruc(usr_instruc, n, insstr)
-
+            editinstruc(usr_instruc, int(n), insstr)
         elif usr_input == 'Depurar':
             debugprogram(usr_instruc)
 
