@@ -71,4 +71,32 @@ Funciones implementadas
     La función devuelve la matriz de registros, un vector con las instrucciones de cada paso, la tabla con los datos y
     una variable booleana que indicará si la función ha tenido que parar el programa o no.
 + *getstate* : Esta función permite recuperar el estado de un registro en un paso concreto, recuperar la instrucción en
-    la que se encuentra el programa en un paso u obtener el vector de registros en un paso.
+    la que se encuentra el programa en un paso u obtener el vector de registros en un paso. Los parámetros son la matriz
+    de instrucciones, el vector de valores iniciales, el registro a consultar, el número de paso y la condición de
+    límite de iteraciones.
++ *editinstuc* : Toma como parámetros las instrucciones, el número de instrucción a modificar y la nueva instrucción en
+    forma de string. La función separará y transformará en vector a la instrucción introducida y procederá a modificar
+    la matriz de instrucciones.
++ *printusrdata* : Toma como valores el vector de valores iniciales y la matriz de instrucciones. La función transforma
+    estos datos en un formato agradable para ser mostrados por pantalla, tal y como se representan por escrito.
++ *debugprogram* : Esta función depura el programa introducido como parámetro. Comprueba si existe un bucle infinito
+    en el programa, si éste no tiene condición de acabado, esto es, existe un 0 en alguna instrucción, o si se hace
+    referencia a alguna instrucción que no se encuentra en el programa. Si presenta alguno de estos problemas, se
+    notifica cuáles de ellos y el paso a seguir para arreglarlo (si procede). En caso contrario, muestra un mensaje con
+    la conformidad del programa.
++ *main* : Esta es la función principal del programa. Se ejecutará cada vez que se ponga en funcionamiento. Mostrará una
+    serie de mensajes para indicar al usuario el funcionamiento del programa. Este pedirá la introducción de un primer
+    programa y después se le preguntará qué desea hacer.
+    Si lo introducido por el usuario coincide con uno de los comandos preestablecidos, el programa ejecutará la función
+    correspondiente de las de arriba pidiendo los valores necesarios si hiciera falta. En caso de que no sea un comando
+    válido, se le pedirá que lo introduzca de nuevo. Los comandos no son susceptibles a la capitalización.
+
+Recomendaciones
+===============
+En el caso de trabajar con Windows, el entorno [WinPython](http://winpython.sourceforge.net/) (en su versión 3.3)
+posee todo lo necesario para el correcto funcionamiento del programa. Además para este entorno no es necesario realizar
+una instalación completa, pudiendo ser un entorno portable.
+
+Si se trabaja con Linux o Mac OSX, un entorno posible puede ser [Algorete Loopy](http://algorete.org/), el cual en su
+web existe una detallada guía de la instalación de la suite [SciPy](http://scipy.org/), necesaria para el funcionamiento
+ de este editor.
