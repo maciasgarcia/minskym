@@ -1,7 +1,7 @@
 Introduction
 ============
 This is a *Minsky Machine* program editor (also known as the counter machine) coded in Python 3 by Juan Antonio Macías
-([@JuanMtg](http://www.twitter.com/JuanMtg)).
+([@juamacgar](http://www.twitter.com/juamacgar)).
 This program editor tries to emulate the Minsky machine, an abstract machine which is Turing complete. It was formalized
 by Marvin Minsky in 1961.
 
